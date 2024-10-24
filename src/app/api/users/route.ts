@@ -12,7 +12,7 @@ export async function GET() {
     await connectDB();
 
     // Fetch all users from the database
-    const users = await usermodel.find({}).select('-password'); // Exclude the password field for security
+    const users = await usermodel.find({}).select('-password').limit(100); // Exclude the password field for security
 
     // Return users as a JSON response
     return NextResponse.json({users}, { status: 200 });
