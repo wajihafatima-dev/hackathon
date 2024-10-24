@@ -26,15 +26,13 @@ export async function POST(request: NextRequest) {
     });
 
     await newUser.save();
-    return NextResponse.json({
-      message: 'User created successfully',
-      user: {
-        id: newUser._id,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        email: newUser.email,
-      },
-    });
+    const user={
+      id: newUser._id,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email,
+    }
+    return NextResponse.json(user);
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message },
@@ -42,3 +40,15 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+// export async function GET() {
+//   try {
+//     await connectDB();
+//     const users = await usermodel.find({}).limit(10).select('-password'); // Exclude the password field for security
+//     return NextResponse.json({ users }, { status: 200 });
+//   } catch (error: any) {
+//     return NextResponse.json(
+//       { error: 'Failed to fetch users', details: error.message },
+//       { status: 500 }
+//     );
+//   }
+// }
