@@ -1,22 +1,19 @@
 // api/tasks/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import taskmodel from "@/app/models/taskmodel";
 import mongoose from "mongoose";
+import { taskmodel } from "@/app/models/taskmodel";
 
 // GET: Fetch all tasks
-export async function GET(request:NextRequest) {
-  try {
-    await mongoose.connect(process.env.MONGO_URL!)
-    const tasks = await taskmodel.find(); 
-    return NextResponse.json({tasks}, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: "Failed to fetch tasks", details: error.message },
-      { status: 500 }
-    );
+export async function GET() {
+    let task=[]
+    try {
+      await mongoose.connect(process.env.MONGO_URL!)
+      task=await taskmodel.find()
+    } catch (error) {
+      console.log(error)
+    }
+    return NextResponse.json({result:task})
   }
-}
-
 // POST: Create a new task
 // export async function POST(request: Request) {
 //   try {

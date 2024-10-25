@@ -1,5 +1,5 @@
+import { taskmodel } from '@/app/models/taskmodel';
 import mongoose from 'mongoose';
-import taskmodel from '@/app/models/taskmodel';
 import { NextResponse } from 'next/server';
 
 export async function GET(
