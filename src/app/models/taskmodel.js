@@ -18,6 +18,6 @@ const TaskSchema = new mongoose.Schema({
 });
 
 // Create the Task model
-export const taskModel = mongoose.models.Task || mongoose.model('Task', TaskSchema);
+export const taskModel = mongoose.models.tasks || mongoose.model('tasks', TaskSchema);
 
 
