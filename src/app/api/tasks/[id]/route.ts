@@ -1,4 +1,4 @@
-import { taskmodel } from '@/app/models/taskmodel';
+import { taskModel } from '@/app/models/taskmodel';
 import mongoose from 'mongoose';
 import { NextResponse } from 'next/server';
 
@@ -12,7 +12,7 @@ export async function GET(
     }
     const taskId = params.id;
     if (taskId) {
-      const task = await taskmodel.findById(taskId);
+      const task = await taskModel.findById(taskId);
       if (!task) {
         return NextResponse.json({ message: "Task not found" }, { status: 404 });
       }
