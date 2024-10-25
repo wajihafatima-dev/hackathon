@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from 'mongoose';
 import { usermodel } from '@/app/models/usermodel';
+import { taskModel } from "@/app/models/taskmodel";
 
 // export async function GET() {
 //   try {
@@ -25,6 +26,14 @@ export async function GET() {
   }
   return NextResponse.json({result:data})
 }
+export async function POST(request: NextRequest) {
+  const payload=await request.json()
+  await mongoose.connect(process.env.MONGO_URL!)
+  let task=new taskModel(payload)
+  const result=await task.save()
+  return NextResponse.json({result})
+}
+  
 // export async function POST(request: NextRequest) {
 //   try {
 //     if (mongoose.connection.readyState === 0) {

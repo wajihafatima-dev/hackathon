@@ -15,16 +15,14 @@ export async function GET() {
     return NextResponse.json({result:task})
   }
 // POST: Create a new task
-export async function OPTIONS() {
-  return NextResponse.json({}, { status: 204 });
-}
 export async function POST(request: NextRequest) {
   try {
-    if (mongoose.connection.readyState === 0) {
       await mongoose.connect(process.env.MONGO_URL!);
-    }
     const { title, content } = await request.json();
-    const newTask = new taskModel({ title, content });
+    const newTask = new taskModel({
+      title,
+      content,
+    });
     const savedTask = await newTask.save();
     return NextResponse.json({ result: savedTask });
   } catch (error: any) {
