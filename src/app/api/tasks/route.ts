@@ -1,14 +1,14 @@
 // api/tasks/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { taskmodel } from "@/app/models/taskmodel";
+import { taskModel } from "@/app/models/taskmodel";
 
 // GET: Fetch all tasks
 export async function GET() {
     let task=[]
     try {
       await mongoose.connect(process.env.MONGO_URL!)
-      task=await taskmodel.find()
+      task=await taskModel.find()
     } catch (error) {
       console.log(error)
     }
