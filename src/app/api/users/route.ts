@@ -2,20 +2,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from 'mongoose';
 import { usermodel } from '@/app/models/usermodel';
-import { taskModel } from "@/app/models/taskmodel";
-
-// export async function GET() {
-//   try {
-//     await connectDB();
-//     const users = await usermodel.find({}).select('-password'); 
-//     return NextResponse.json({users}, { status: 200 });
-//   } catch (error: any) {
-//     return NextResponse.json(
-//       { error: 'Failed to fetch users', details: error.message },
-//       { status: 500 }
-//     );
-//   }
-// }
 export async function GET() {
   let data=[]
   try {
@@ -26,10 +12,10 @@ export async function GET() {
   }
   return NextResponse.json({result:data})
 }
-export async function POST(request: NextRequest) {
+export async function POST(request:NextRequest) {
   const payload=await request.json()
   await mongoose.connect(process.env.MONGO_URL!)
-  let task=new taskModel(payload)
+  let task=new usermodel(payload)
   const result=await task.save()
   return NextResponse.json({result})
 }
