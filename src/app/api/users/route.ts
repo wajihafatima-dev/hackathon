@@ -26,44 +26,44 @@ export async function GET() {
   }
   return NextResponse.json({result:data})
 }
-export async function POST(request: NextRequest) {
-  try {
-    if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(process.env.MONGO_URL!);
-    }
-    const { firstName, lastName, email, password } = await request.json();
-    const existingUser = await usermodel.findOne({ email });
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'This email already exists' },
-        { status: 400 }
-      );
-    }
+// export async function POST(request: NextRequest) {
+//   try {
+//     if (mongoose.connection.readyState === 0) {
+//       await mongoose.connect(process.env.MONGO_URL!);
+//     }
+//     const { firstName, lastName, email, password } = await request.json();
+//     const existingUser = await usermodel.findOne({ email });
+//     if (existingUser) {
+//       return NextResponse.json(
+//         { error: 'This email already exists' },
+//         { status: 400 }
+//       );
+//     }
     
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const newUser = new usermodel({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    });
-    await newUser.save();
-    const user = {
-      id: newUser._id,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      email: newUser.email,
-    };
-    return NextResponse.json(user, { status: 201 });
-  } catch (error: any) {
-    console.error("Error creating user:", error.message);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
-}
+//     const salt = await bcrypt.genSalt(10);
+//     const hashedPassword = await bcrypt.hash(password, salt);
+//     const newUser = new usermodel({
+//       firstName,
+//       lastName,
+//       email,
+//       password: hashedPassword,
+//     });
+//     await newUser.save();
+//     const user = {
+//       id: newUser._id,
+//       firstName: newUser.firstName,
+//       lastName: newUser.lastName,
+//       email: newUser.email,
+//     };
+//     return NextResponse.json(user, { status: 201 });
+//   } catch (error: any) {
+//     console.error("Error creating user:", error.message);
+//     return NextResponse.json(
+//       { error: 'Internal Server Error' },
+//       { status: 500 }
+//     );
+//   }
+// }
 // export async function POST(req: Request) {
 //     try {
 //       const { firstName, lastName, email, password } = await req.json();

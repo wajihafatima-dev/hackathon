@@ -15,20 +15,26 @@ export async function GET() {
     return NextResponse.json({result:task})
   }
 // POST: Create a new task
-// export async function POST(request: Request) {
-//   try {
-//     await connectDatabase();
-//     const { title, content } = await request.json(); 
-//     const newTask = new taskmodel({ title, content });
-//    const createdTask=  await newTask.save();
-//     return NextResponse.json(createdTask,{ status: 201 });
-//   } catch (error: any) {
-//     return NextResponse.json(
-//       { error: "Failed to create task", details: error.message },
-//       { status: 500 }
-//     );
-//   }
-// }
+export async function POST(request: NextRequest) {
+  try {
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(process.env.MONGO_URL!);
+    }
+    const { title, content } = await request.json();
+    const newTask = new taskModel({
+      title,
+      content,
+    });
+    const savedTask = await newTask.save();
+    return NextResponse.json({ result: savedTask });
+  } catch (error: any) {
+    console.log("Error creating task:", error);
+    return NextResponse.json(
+      { error: "Failed to create task", details: error.message },
+      { status: 500 }
+    );
+  }
+}
 
 // // PUT: Update an existing task
 // export async function PUT(request: Request) {
