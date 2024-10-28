@@ -1,21 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import connectToDatabase from '@/lib/mongoose'; // Ensure this function is correctly implemented
+import {connectMongo} from '@/lib/mongoose'; // Ensure this function is correctly implemented
 import { usermodel } from '@/app/models/usermodel';
 
-// export async function GET() {
-//   try {
-//     await connectToDatabase();
-//     const data = await usermodel.find() // Using lean() to return plain JavaScript objects
-//     return NextResponse.json({ result: data });
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//     return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
-//   }
-// }
+export async function GET() {
+  try {
+    await connectMongo();
+    const data = await usermodel.find().lean(); // Using lean() to return plain JavaScript objects
+    return NextResponse.json({ result: data });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
-    await connectToDatabase();
+    await connectMongo();
     const payload = await request.json();
 
     // Validate payload
