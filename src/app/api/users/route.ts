@@ -1,33 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
+import {connectToDatabase}from '@/lib/mongoose'; // Ensure this function is correctly implemented
 import { usermodel } from '@/app/models/usermodel';
-import mongoose from 'mongoose';
-
-async function connectToMongo() {
-  if (mongoose.connection.readyState === 1) {
-    return; // Already connected
-  }
-  
-  await mongoose.connect(process.env.MONGO_URL!);
-}
 
 export async function GET() {
-  let data = [];
   try {
-    await connectToMongo();
-    data = await usermodel.find().lean(); // Use lean() for faster queries
+    await connectToDatabase();
+    const data = await usermodel.find() // Using lean() to return plain JavaScript objects
+    return NextResponse.json({ result: data });
   } catch (error) {
     console.error("Error fetching data:", error);
     return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
   }
-  return NextResponse.json({ result: data });
 }
 
 export async function POST(request: NextRequest) {
   try {
-    await connectToMongo();
+    await connectToDatabase();
     const payload = await request.json();
-    
-    // Basic validation
+
+    // Validate payload
     if (!payload.firstName || !payload.email || !payload.password) {
       return NextResponse.json({ error: 'First Name, Email, and Password are required' }, { status: 400 });
     }
@@ -35,14 +26,18 @@ export async function POST(request: NextRequest) {
     const user = new usermodel(payload);
     const result = await user.save();
     return NextResponse.json({ result }, { status: 201 });
-    
-  } catch (error:any) {
+
+  } catch (error: any) {
     console.error("Error saving data:", error);
+    
+    // Handle duplicate email error
+    if (error.code === 11000) {
+      return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
+    }
+
     return NextResponse.json({ error: 'Failed to save data', details: error.message }, { status: 500 });
   }
 }
-
-
 
 // export async function POST(request: NextRequest) {
 //   try {

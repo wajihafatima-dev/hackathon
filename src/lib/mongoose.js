@@ -1,10 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const connectMongo = async () => {
-  if (mongoose.connection.readyState >= 1) {
-    return;
+let isConnected = false;
+
+export async function connectToDatabase() {
+  if (isConnected) {
+    return; // Already connected
   }
-  return mongoose.connect(process.env.MONGO_URL);
-};
 
-export default connectMongo;
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    isConnected = true;
+  } catch (error) {
+    console.error("Database connection failed:", error);
+    throw new Error("Database connection failed");
+  }
+}
