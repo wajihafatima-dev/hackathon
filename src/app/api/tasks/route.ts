@@ -7,7 +7,7 @@ import { taskModel } from "@/app/models/taskmodel";
 export async function GET() {
     let task=[]
     try {
-      await mongoose.connect(process.env.MONGO_URL!)
+      await mongoose.connect(process.env.MONGO_URI!)
       task=await taskModel.find()
     } catch (error) {
       console.log(error)
@@ -17,7 +17,7 @@ export async function GET() {
 // POST: Create a new task
 export async function POST(request: NextRequest) {
   try {
-      await mongoose.connect(process.env.MONGO_URL!);
+      await mongoose.connect(process.env.MONGO_URI!);
     const { title, content } = await request.json();
     const newTask = new taskModel({
       title,

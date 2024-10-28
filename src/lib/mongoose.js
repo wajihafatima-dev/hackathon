@@ -15,3 +15,5 @@ export async function connectToDatabase() {
     throw new Error("Database connection failed");
   }
 }
+
+
