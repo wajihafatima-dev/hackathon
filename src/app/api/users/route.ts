@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {connectToDatabase}from '@/lib/mongoose'; // Ensure this function is correctly implemented
+import connectToDatabase from '@/lib/mongoose'; // Ensure this function is correctly implemented
 import { usermodel } from '@/app/models/usermodel';
 
 export async function GET() {
