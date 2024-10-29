@@ -2,12 +2,12 @@
     "version": 2,
     "builds": [
       {
-        "src": "next.config.js",
+        "src": "next.config.mjs",
         "use": "@vercel/next"
       }
     ],
     "env": {
-      "NEXT_PUBLIC_API_URL": "https://yourapiurl.com"
+      "NEXT_PUBLIC_API_URL": "http://localhost:3000"
     },
     "rewrites": [
       {
