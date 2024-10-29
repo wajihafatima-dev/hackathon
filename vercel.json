@@ -1,11 +1,5 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "next.config.js",
-        "use": "@vercel/next"
-      }
-    ],
     "env": {
       "NEXT_PUBLIC_API_URL": "http://localhost:3000",
        "MONGO_URI": "mongodb+srv://wajihafatima:mongodb123@backend.jc2mk.mongodb.net/mydatabase?retryWrites=true&w=majority&appName=Backend"
