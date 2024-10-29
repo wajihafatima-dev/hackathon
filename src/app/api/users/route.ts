@@ -1,28 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectMongo } from '@/lib/mongoose';
+import {connectMongo} from '@/lib/mongoose'; // Ensure this function is correctly implemented
 import { usermodel } from '@/app/models/usermodel';
-
-// Helper to enforce duration limit
-function timeout(promise: Promise<any>, ms: number) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error("Request timed out")), ms)),
-  ]);
-}
-
-const maxDuration = 5000; 
+export const maxDuration = 5; 
 export async function GET() {
   try {
     await connectMongo();
-    const data = await timeout(usermodel.find().lean(), maxDuration); // With timeout
+    const data = await usermodel.find().lean(); // Using lean() to return plain JavaScript objects
     return NextResponse.json({ result: data });
-  } catch (error: any) {
-    console.error("Error fetching data:", error);
-    return NextResponse.json({ error: 'Failed to fetch data', details: error.message }, { status: 500 });
+  } catch (error) {
+   console.error("Error fetching data:", error);
+    return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
   }
 }
 
-// POST: Create a new user
+
 export async function POST(request: NextRequest) {
   try {
     await connectMongo();
@@ -33,22 +24,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'First Name, Email, and Password are required' }, { status: 400 });
     }
 
-    // Check for existing email
-    const existingUser = await timeout(usermodel.findOne({ email: payload.email }), maxDuration);
-    if (existingUser) {
-      return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
-    }
-
     const user = new usermodel(payload);
-    const result = await timeout(user.save(), maxDuration); // With timeout
+    const result = await user.save();
     return NextResponse.json({ result }, { status: 201 });
 
   } catch (error: any) {
-    console.error("Error saving data:", error);
-    if (error.code === 11000) {  // Duplicate email error code
+   console.error("Error saving data:", error);
+    // Handle duplicate email error
+    if (error.code === 11000) {
       return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
     }
-    return NextResponse.json({ error: 'Failed to save data', details: error.message }, { status: 500 });
+
+     return NextResponse.json({ error: 'Failed to save data', details: error.message }, { status: 500 });
   }
 }
 
